@@ -82,9 +82,13 @@ def predict(x_train,x_test,K=5):
             distances.append((distance, train_image.fine_label))
         
         distances.sort(key=lambda x: x[0])
-        print('Predicted label:', distances[0][1])
-        print('Distance:', distances[0][0])
-        print()
+        k_nearest_labels = [distance[1] for distance in distances[:K]]
+        predicted_elephants = k_nearest_labels.count('elephant')
+        predicted_buses = k_nearest_labels.count('bus')
+        if test_image.fine_label == 'elephant' and predicted_elephants > predicted_buses:
+            correct_predictions += 1
+        elif test_image.fine_label == 'bus' and predicted_buses > predicted_elephants:
+            correct_predictions += 1
 
     accuracy = (correct_predictions / total_number_of_predictions) * 100
     print('Accuracy: {:.2f}%'.format(accuracy))
@@ -95,4 +99,5 @@ if __name__ == "__main__" :
     buses = unpickle('/media/bahy/MEDO BAHY/CMS/Deep Learning/Assignment 1/Image-Classification-using-KNN/Dataset/buses')
 
     x_train , x_test = train_test_split(elephants , buses )
+
     predict(x_train,x_test)
