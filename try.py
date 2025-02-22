@@ -29,21 +29,6 @@ def decode_data(d):
         decoded[key] = value
     return decoded
 
-class CifarImage:
-    def __init__(self, data, fine_label, coarse_label, filename):
-        """
-        Dataset/
-        ├── train          # 50,000 training images (batch 1 of 1)
-        ├── test           # 10,000 test images
-        └── meta          # Contains class names and hierarchical information
-        """
-        self.data = np.array(data)  # Image data as numpy array
-        self.fine_label = fine_label  # Detailed category (0-99)
-        self.coarse_label = coarse_label  # Superclass category (0-19)
-        self.filename = filename  # Image filename
-
-
-
 
 data = unpickle('/media/bahy/MEDO BAHY/CMS/Deep Learning/Assignment 1/Image-Classification-using-KNN/Dataset/train')
 data = decode_data(data)
