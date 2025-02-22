@@ -1,5 +1,6 @@
 import numpy as np
 import pickle
+from cifar_image import CifarImage
 
 def unpickle(file):
     import pickle
