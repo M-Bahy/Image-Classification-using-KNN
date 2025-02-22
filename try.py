@@ -1,10 +1,15 @@
 import numpy as np
+import pickle
 
 def unpickle(file):
     import pickle
     with open(file, 'rb') as fo:
         dict = pickle.load(fo, encoding='bytes')
     return dict
+
+def pickle(name, data):
+    with open(name, 'wb') as file:
+        pickle.dump(data, file)
 
 def decode_data(d):
     decoded = {}
@@ -44,7 +49,7 @@ data = unpickle('/media/bahy/MEDO BAHY/CMS/Deep Learning/Assignment 1/Image-Clas
 data = decode_data(data)
 meta = unpickle('/media/bahy/MEDO BAHY/CMS/Deep Learning/Assignment 1/Image-Classification-using-KNN/Dataset/meta')
 meta = decode_data(meta) # fine_label_names & coarse_label_names
-print(meta.keys())
+
 # Create list of CifarImage objects
 images = []
 for i in range(len(data['data'])):
@@ -56,19 +61,45 @@ for i in range(len(data['data'])):
     )
     images.append(image)
 
-elephant = 0
-bus = 0
+elephants = []
+buses = []
 for image in images:
     fine_label = image.fine_label
     coarse_label = image.coarse_label
-    if meta['fine_label_names'][fine_label] == 'elephant' and meta['coarse_label_names'][coarse_label] == 'large omnivores and herbivores':
-        elephant += 1
-    if meta['fine_label_names'][fine_label] == 'bus' and meta['coarse_label_names'][coarse_label] == 'vehicles 1':
-        bus += 1
+    if meta['fine_label_names'][fine_label] == 'elephant' and meta['coarse_label_names'][coarse_label] == 'large_omnivores_and_herbivores':
+        elephants.append(image)
+    if meta['fine_label_names'][fine_label] == 'bus' and meta['coarse_label_names'][coarse_label] == 'vehicles_1':
+        buses.append(image)
     
-print(f'Elephants: {elephant}')
-print(f'Buses: {bus}')
 
+data = unpickle('/media/bahy/MEDO BAHY/CMS/Deep Learning/Assignment 1/Image-Classification-using-KNN/Dataset/test')
+data = decode_data(data)
+images = []
+for i in range(len(data['data'])):
+    image = CifarImage(
+        data=data['data'][i],
+        fine_label=data['fine_labels'][i],
+        coarse_label=data['coarse_labels'][i],
+        filename=data['filenames'][i]
+    )
+    images.append(image)
 
+for image in images:
+    fine_label = image.fine_label
+    coarse_label = image.coarse_label
+    if meta['fine_label_names'][fine_label] == 'elephant' and meta['coarse_label_names'][coarse_label] == 'large_omnivores_and_herbivores':
+        elephants.append(image)
+    if meta['fine_label_names'][fine_label] == 'bus' and meta['coarse_label_names'][coarse_label] == 'vehicles_1':
+        buses.append(image)
 
+print('Number of elephants:', len(elephants))
+print('Number of buses:', len(buses))
 
+pickle('/media/bahy/MEDO BAHY/CMS/Deep Learning/Assignment 1/Image-Classification-using-KNN/Dataset/elephants', elephants)
+pickle('/media/bahy/MEDO BAHY/CMS/Deep Learning/Assignment 1/Image-Classification-using-KNN/Dataset/buses', buses)
+
+elephants = unpickle('/media/bahy/MEDO BAHY/CMS/Deep Learning/Assignment 1/Image-Classification-using-KNN/Dataset/elephants')
+buses = unpickle('/media/bahy/MEDO BAHY/CMS/Deep Learning/Assignment 1/Image-Classification-using-KNN/Dataset/buses')
+
+print('Number of elephants:', len(elephants))
+print('Number of buses:', len(buses))
