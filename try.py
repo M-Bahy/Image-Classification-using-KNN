@@ -1,3 +1,5 @@
+import numpy as np
+
 def unpickle(file):
     import pickle
     with open(file, 'rb') as fo:
@@ -22,34 +24,51 @@ def decode_data(d):
         decoded[key] = value
     return decoded
 
+class CifarImage:
+    def __init__(self, data, fine_label, coarse_label, filename):
+        """
+        Dataset/
+        ├── train          # 50,000 training images (batch 1 of 1)
+        ├── test           # 10,000 test images
+        └── meta          # Contains class names and hierarchical information
+        """
+        self.data = np.array(data)  # Image data as numpy array
+        self.fine_label = fine_label  # Detailed category (0-99)
+        self.coarse_label = coarse_label  # Superclass category (0-19)
+        self.filename = filename  # Image filename
+
+
+
+
 data = unpickle('/media/bahy/MEDO BAHY/CMS/Deep Learning/Assignment 1/Image-Classification-using-KNN/Dataset/train')
 data = decode_data(data)
-print("----------------- Data -----------------")
-"""
-Dataset/
-├── train          # 50,000 training images (batch 1 of 1)
-├── test           # 10,000 test images
-└── meta          # Contains class names and hierarchical information
-"""
-print(data.keys())
-print(data["filenames"][0]) # name of the image file
-print(data["batch_label"]) # Label of the batch data
-print(data["fine_labels"][0]) # Detailed category labels (100 classes)
-print(data["coarse_labels"][0]) # Broader category labels (20 classes)
-print(data["data"][0]) # The actual image data in flattened format
-print(f"Number of training images: {len(data['data'])}")  # Should print 50000
+meta = unpickle('/media/bahy/MEDO BAHY/CMS/Deep Learning/Assignment 1/Image-Classification-using-KNN/Dataset/meta')
+meta = decode_data(meta) # fine_label_names & coarse_label_names
+print(meta.keys())
+# Create list of CifarImage objects
+images = []
+for i in range(len(data['data'])):
+    image = CifarImage(
+        data=data['data'][i],
+        fine_label=data['fine_labels'][i],
+        coarse_label=data['coarse_labels'][i],
+        filename=data['filenames'][i]
+    )
+    images.append(image)
 
+elephant = 0
+bus = 0
+for image in images:
+    fine_label = image.fine_label
+    coarse_label = image.coarse_label
+    if meta['fine_label_names'][fine_label] == 'elephant' and meta['coarse_label_names'][coarse_label] == 'large omnivores and herbivores':
+        elephant += 1
+    if meta['fine_label_names'][fine_label] == 'bus' and meta['coarse_label_names'][coarse_label] == 'vehicles 1':
+        bus += 1
+    
+print(f'Elephants: {elephant}')
+print(f'Buses: {bus}')
 
-
-
-
-print("----------------- Metadata -----------------")
-
-data = unpickle('/media/bahy/MEDO BAHY/CMS/Deep Learning/Assignment 1/Image-Classification-using-KNN/Dataset/meta')
-data = decode_data(data)
-print(data.keys())
-print(data["fine_label_names"][0]) # The 100 classes
-print(data["coarse_label_names"][0]) # The 20 classes
 
 
 
