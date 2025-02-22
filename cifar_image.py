@@ -1,5 +1,6 @@
+import numpy as np
 class CifarImage:
-    def __init__(self, data, fine_label, coarse_label, filename):
+    def __init__(self, data, fine_label):
         """
         Dataset/
         ├── train          # 50,000 training images (batch 1 of 1)
@@ -8,8 +9,8 @@ class CifarImage:
         """
         self.data = np.array(data)  # Image data as numpy array
         self.fine_label = fine_label  # Detailed category (0-99)
-        self.coarse_label = coarse_label  # Superclass category (0-19)
-        self.filename = filename  # Image filename
+        # self.coarse_label = coarse_label  # Superclass category (0-19)
+        # self.filename = filename  # Image filename
 
 def unpickle(file):
     import pickle

@@ -41,20 +41,16 @@ images = []
 for i in range(len(data['data'])):
     image = CifarImage(
         data=data['data'][i],
-        fine_label=data['fine_labels'][i],
-        coarse_label=data['coarse_labels'][i],
-        filename=data['filenames'][i]
+        fine_label=meta['fine_label_names'][data['fine_labels'][i]],
     )
     images.append(image)
 
 elephants = []
 buses = []
 for image in images:
-    fine_label = image.fine_label
-    coarse_label = image.coarse_label
-    if meta['fine_label_names'][fine_label] == 'elephant' and meta['coarse_label_names'][coarse_label] == 'large_omnivores_and_herbivores':
+    if image.fine_label == 'elephant' :
         elephants.append(image)
-    if meta['fine_label_names'][fine_label] == 'bus' and meta['coarse_label_names'][coarse_label] == 'vehicles_1':
+    if image.fine_label == 'bus' :
         buses.append(image)
     
 
@@ -63,19 +59,15 @@ data = decode_data(data)
 images = []
 for i in range(len(data['data'])):
     image = CifarImage(
-        data=data['data'][i],
-        fine_label=data['fine_labels'][i],
-        coarse_label=data['coarse_labels'][i],
-        filename=data['filenames'][i]
+        data=data['data'][i], 
+        fine_label=meta['fine_label_names'][data['fine_labels'][i]],
     )
     images.append(image)
 
 for image in images:
-    fine_label = image.fine_label
-    coarse_label = image.coarse_label
-    if meta['fine_label_names'][fine_label] == 'elephant' and meta['coarse_label_names'][coarse_label] == 'large_omnivores_and_herbivores':
+    if image.fine_label== 'elephant' :
         elephants.append(image)
-    if meta['fine_label_names'][fine_label] == 'bus' and meta['coarse_label_names'][coarse_label] == 'vehicles_1':
+    if image.fine_label == 'bus' :
         buses.append(image)
 
 print('Number of elephants:', len(elephants))
@@ -89,3 +81,4 @@ buses = unpickle('/media/bahy/MEDO BAHY/CMS/Deep Learning/Assignment 1/Image-Cla
 
 print('Number of elephants:', len(elephants))
 print('Number of buses:', len(buses))
+print('First elephant:', elephants[0].fine_label)

@@ -64,7 +64,7 @@ def euclidean_distance(x, y):
     y = np.array(y)
     return np.sqrt(np.sum((x - y) ** 2))
 
-def predict(x_train,x_test):
+def predict(x_train,x_test,K=5):
     
     for animal in x_train:
         animal.data = extract_feature_vector(animal.data)
@@ -72,6 +72,22 @@ def predict(x_train,x_test):
     for animal in x_test:
         animal.data = extract_feature_vector(animal.data)
 
+    total_number_of_predictions = len(x_test)
+    correct_predictions = 0
+
+    for test_image in x_test:
+        distances = []
+        for train_image in x_train:
+            distance = euclidean_distance(test_image.data, train_image.data)
+            distances.append((distance, train_image.fine_label))
+        
+        distances.sort(key=lambda x: x[0])
+        print('Predicted label:', distances[0][1])
+        print('Distance:', distances[0][0])
+        print()
+
+    accuracy = (correct_predictions / total_number_of_predictions) * 100
+    print('Accuracy: {:.2f}%'.format(accuracy))
 
 if __name__ == "__main__" :
 
@@ -79,8 +95,4 @@ if __name__ == "__main__" :
     buses = unpickle('/media/bahy/MEDO BAHY/CMS/Deep Learning/Assignment 1/Image-Classification-using-KNN/Dataset/buses')
 
     x_train , x_test = train_test_split(elephants , buses )
-
-    print('Number of items in training set:', len(x_train))
-    print('Number of items in test set:', len(x_test))
-
-    predictions = predict(x_train,x_test)
+    predict(x_train,x_test)
